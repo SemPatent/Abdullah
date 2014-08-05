@@ -1,0 +1,126 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using System.Xml;
+using System.IO;
+using System.Windows.Forms;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
+
+
+namespace Practicals_2014.Pages
+{
+    /// <summary>
+    /// Interaction logic for WelcomePage.xaml
+    /// </summary>
+    public partial class WelcomePage : System.Windows.Controls.UserControl
+    {
+        public WelcomePage()
+        {
+            InitializeComponent();
+        }
+
+        private void SelDir_btn_Click(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
+
+            folderDlg.ShowNewFolderButton = true;
+
+            DialogResult result = folderDlg.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+
+                GetFilesFromDir(folderDlg.SelectedPath);
+
+                Environment.SpecialFolder root = folderDlg.RootFolder;
+
+            }
+
+        }
+
+        private void GetFilesFromDir(string dir)
+        {
+            FileInfo[] fileList = new DirectoryInfo(dir).GetFiles("*.xml", SearchOption.AllDirectories);
+            foreach (FileInfo file in fileList)
+            {
+                
+                Console.WriteLine( "{0,-25} {1,25}", file.FullName, file.LastWriteTime);
+
+                SearchForEngPatent(GetPublNumFromXmlFile(file.FullName));
+            }
+        }
+
+        private string GetPublNumFromXmlFile(string filename)
+        {
+            System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+            xmlDoc.XmlResolver = null;
+            xmlDoc.Load(filename);
+            XmlElement root = xmlDoc.DocumentElement;
+
+            string publNum = root.Attributes["doc-number"].Value;
+            publNum = "RU" + publNum.Substring(1);
+
+            return publNum;
+
+        }
+
+        private string SearchForEngPatent(string publNum)
+        {
+            IWebDriver driver = new FirefoxDriver();
+
+            driver.Navigate().GoToUrl("http://www.ipnewsflash.com/");
+            IWebElement query = driver.FindElement(By.Name("search_family"));
+            query.SendKeys(publNum);
+            IWebElement query2 = driver.FindElement(By.Name("submit"));
+            query2.Click();
+
+            driver.Quit();
+
+            return driver.PageSource;
+        }
+
+        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        {
+            GetFilesFromDir("D:\\patents\\438");
+            //string filename3 = "C:\\Users\\Bilal\\Desktop\\test\\FirstFloor.ModernUI.xml";
+
+           // // Configure open file dialog box
+           // Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+           // dlg.FileName = "Patent"; // Default file name
+           // dlg.DefaultExt = ".xml"; // Default file extension
+           // dlg.Filter = "XML Documents (.xml)|*.xml|Text documents (.txt)|*.txt|All Files|*.*";
+           //// dlg.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension 
+
+           // // Show open file dialog box
+           // Nullable<bool> result = dlg.ShowDialog();
+
+           // // Process open file dialog box results 
+           // if (result == true)
+            //{
+            //    // Open document 
+            //    //string filename = dlg.FileName;
+            //    string filename = "C:\\Users\\Bilal\\Desktop\\test\\FirstFloor.ModernUI.xml";
+
+            //    FileStream READER = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite); 
+            //    System.Xml.XmlDocument CompSpecs = new System.Xml.XmlDocument();
+            //    CompSpecs.Load(READER);
+            //    System.Xml.XmlNodeList NodeList = CompSpecs.GetElementsByTagName("summary"); 
+            //}
+        }
+
+        
+    }
+}

@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Practicals_2014.Pages.PatentsFromWeb"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" Height="481.133" Width="886" 
+            >
+    <Grid Style="{StaticResource ContentRoot}">
+        <ScrollViewer Margin="0,-10,0,10">
+            <StackPanel MinWidth="200">
+                <TextBlock Text="Download English and Russian Patents Claims" Style="{StaticResource Heading2}" FontSize="18" />
+                <TextBox x:Name="StartPublNum" Height="23" TextWrapping="Wrap" Width="120" HorizontalAlignment="Left" Margin="0,50,20,30" Text="RU97508322"/>
+                <xctk:IntegerUpDown x:Name="CntPatent" Value="1" Width="120" HorizontalAlignment="Left" Margin="0,30,20,30" Height="23" Maximum="100" Minimum="1" />
+                <Button x:Name="SaveLocation" Content="Save Location" HorizontalAlignment="Left" Margin="0,25,20,20" Width="120" Height="30" Click="SaveLocation_Click" />
+                <Button x:Name="GetPatent" Content="Get Patents" HorizontalAlignment="Left" Margin="0,35,20,20" Width="120" Height="30" Click="GetPatent_Click" />
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Label x:Name="saveLocation" Content="label" Height="30" Width="854" HorizontalAlignment="Left" Margin="0,256,0,151.333" RenderTransformOrigin="0.499,0.467"/>
+        <Label x:Name="label1" Content="Number of Patent" Width="854" HorizontalAlignment="Left" Margin="0,96,0,271.333" RenderTransformOrigin="0.499,0.467" BorderThickness="0,30,0,0"/>
+        <Label x:Name="label2" Content="Patent Document Number" Height="30" Width="854" HorizontalAlignment="Left" Margin="0,45,0,362.333" RenderTransformOrigin="0.499,0.467"/>
+
+        <ProgressBar x:Name="pbStatus" HorizontalAlignment="Left" Height="28" Margin="0,377,0,0" VerticalAlignment="Top" Width="844" Minimum="0" Maximum="100"/>
+        <TextBlock Text="{Binding ElementName=pbStatus, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,377,0,0" />
+
+        <Label x:Name="StatusLabel" HorizontalAlignment="Left" Margin="0,352,0,0" VerticalAlignment="Top" Width="844" Height="20">
+            <Label Content="Ready"/>
+        </Label>
+    </Grid>
+</UserControl>
